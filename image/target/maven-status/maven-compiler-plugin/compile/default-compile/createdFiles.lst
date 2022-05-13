@@ -1,3 +1,4 @@
-com\udacity\catpoint\image\AwsImageService.class
 com\udacity\catpoint\image\FakeImageService.class
 com\udacity\catpoint\image\StyleService.class
+com\udacity\catpoint\image\AwsImageService.class
+module-info.class
