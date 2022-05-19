@@ -170,4 +170,20 @@ public class SecurityServiceTest {
         verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.ALARM);
 
     }
+
+    // more coverage Test
+    @Test
+    void addAndRemoveStatusListener() {
+        securityService.addStatusListener(statusListener);
+        securityService.removeStatusListener(statusListener);
+    }
+
+    @Test
+    void addAndRemoveSensor() {
+        securityService.addSensor(sensor);
+        securityService.removeSensor(sensor);
+    }
+
+
+
 }
