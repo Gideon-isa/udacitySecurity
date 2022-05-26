@@ -148,7 +148,7 @@ public class SecurityServiceTest {
         verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.NO_ALARM);
     }
 
-    // Test Ten
+    // Test Ten case 1
     @ParameterizedTest
     @EnumSource(value = ArmingStatus.class, names = {"ARMED_AWAY", "ARMED_HOME"})
     void updateSensors_systemArmed_deactivateAllSensors(ArmingStatus armingStatus) {
@@ -159,6 +159,19 @@ public class SecurityServiceTest {
        securityService.getSensors().forEach(s -> {
            assertFalse(s.getActive());
        });
+    }
+
+    // Test Ten case 2
+    @ParameterizedTest
+    @EnumSource(value = ArmingStatus.class, names = {"ARMED_AWAY", "ARMED_HOME"})
+    void updateSensors_systemArmed_deactivateAllSensorsArmed(ArmingStatus armingStatus) {
+        Set<Sensor> senors = getAllSensors(2, true);
+        when(securityService.getAlarmStatus()).thenReturn(AlarmStatus.ALARM);
+        when(securityService.getSensors()).thenReturn(senors);
+        securityService.setArmingStatus(armingStatus);
+        securityService.getSensors().forEach(s -> {
+            assertFalse(s.getActive());
+        });
     }
 
     // Test eleven
@@ -183,7 +196,5 @@ public class SecurityServiceTest {
         securityService.addSensor(sensor);
         securityService.removeSensor(sensor);
     }
-
-
 
 }

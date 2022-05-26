@@ -34,7 +34,7 @@ public class SecurityService {
     /**
      * Sets the current arming status for the system. Changing the arming status
      * may update both the alarm status.
-     * @param armingStatus
+     * @param armingStatus - an enum that tell the arming state
      */
     public void setArmingStatus(ArmingStatus armingStatus) {
         if(armingStatus == ArmingStatus.DISARMED) {
@@ -64,8 +64,8 @@ public class SecurityService {
 
     /**
      *
-     * @param state -
-     * @return
+     * @param state - true if the alarm state is active
+     * @return - boolean
      */
     private boolean getAllSensorsSate(boolean state) {
         return getSensors().stream().allMatch(sensor -> sensor.getActive() == state);
@@ -73,7 +73,7 @@ public class SecurityService {
 
     /**
      * Register the StatusListener for alarm system updates from within the SecurityService.
-     * @param statusListener
+     * @param statusListener - notify the system when the state is change
      */
     public void addStatusListener(StatusListener statusListener) {
         statusListeners.add(statusListener);
@@ -85,7 +85,7 @@ public class SecurityService {
 
     /**
      * Change the alarm status of the system and notify all listeners.
-     * @param status
+     * @param status - enum object to show the alarm state
      */
     public void setAlarmStatus(AlarmStatus status) {
         if (status == AlarmStatus.PENDING_ALARM && getAllSensorsSate(false)) {
@@ -121,8 +121,8 @@ public class SecurityService {
 
     /**
      * Change the activation status for the specified sensor and update alarm status if necessary.
-     * @param sensor
-     * @param active
+     * @param sensor - sorting display
+     * @param active - Boolean
      */
     public void changeSensorActivationStatus(Sensor sensor, Boolean active) {
         if(!sensor.getActive() && active || sensor.getActive() && !active) {
@@ -139,7 +139,7 @@ public class SecurityService {
     /**
      * Send an image to the SecurityService for processing. The securityService will use its provided
      * ImageService to analyze the image for cats and update the alarm status accordingly.
-     * @param currentCameraImage
+     * @param currentCameraImage - displayed image
      */
     public void processImage(BufferedImage currentCameraImage) {
         catDetected(imageService.imageContainsCat(currentCameraImage, 50.0f));
