@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.udacity.catpoint.image","l":"AwsImageService"},{"p":"com.udacity.catpoint.image","l":"FakeImageService"},{"p":"com.udacity.catpoint.image","l":"ImageService"},{"p":"com.udacity.catpoint.image","l":"StyleService"}]

@@ -1,0 +1,4 @@
+module:security
+com.udacity.catpoint.application
+com.udacity.catpoint.data
+com.udacity.catpoint.service
