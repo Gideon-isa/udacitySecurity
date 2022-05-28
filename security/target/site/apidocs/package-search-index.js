@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"m":"security","l":"com.udacity.catpoint.application"},{"m":"security","l":"com.udacity.catpoint.data"},{"m":"security","l":"com.udacity.catpoint.service"}]
