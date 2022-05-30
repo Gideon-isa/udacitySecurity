@@ -12,18 +12,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-//@MockitoSettings(strictness = Strictness.LENIENT)
 public class SecurityServiceTest {
 
     @Mock
@@ -72,7 +68,7 @@ public class SecurityServiceTest {
         when(securityService.getArmingStatus()).thenReturn(armingStatus);
         when(securityService.getAlarmStatus()).thenReturn(AlarmStatus.NO_ALARM);
         securityService.changeSensorActivationStatus(sensor, true);
-        verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.ALARM);
+        verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.ALARM);
     }
 
     // Test two
@@ -81,7 +77,7 @@ public class SecurityServiceTest {
         when(securityRepository.getArmingStatus()).thenReturn(ArmingStatus.ARMED_HOME);
         when(securityRepository.getAlarmStatus()).thenReturn(AlarmStatus.PENDING_ALARM);
         securityService.changeSensorActivationStatus(sensor, true);
-        verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.ALARM);
+        verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.ALARM);
     }
 
     // Test three
@@ -90,7 +86,7 @@ public class SecurityServiceTest {
         Set<Sensor> sensors = getAllSensors(2, false);
         when(securityRepository.getSensors()).thenReturn(sensors);
         securityService.setAlarmStatus(AlarmStatus.PENDING_ALARM);
-        verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.NO_ALARM);
+        verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.NO_ALARM);
     }
 
     //Test four
@@ -107,7 +103,7 @@ public class SecurityServiceTest {
     void changeAlarmState_systemActivatedWhileAlreadyActiveAndAlarmPending_changeToAlarmState() {
         when(securityRepository.getAlarmStatus()).thenReturn(AlarmStatus.PENDING_ALARM);
         securityService.changeSensorActivationStatus(sensor, true);
-        verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.ALARM);
+        verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.ALARM);
 
     }
 
@@ -126,7 +122,7 @@ public class SecurityServiceTest {
         when(securityRepository.getArmingStatus()).thenReturn(ArmingStatus.ARMED_HOME);
         when(imageService.imageContainsCat(any(), anyFloat())).thenReturn(true);
         securityService.processImage(mock(BufferedImage.class));
-        verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.ALARM);
+        verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.ALARM);
 
     }
 
@@ -137,7 +133,7 @@ public class SecurityServiceTest {
         when(securityRepository.getSensors()).thenReturn(inActiveSensors);
         when(imageService.imageContainsCat(any(), anyFloat())).thenReturn(false);
         securityService.processImage(mock(BufferedImage.class));
-        verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.NO_ALARM);
+        verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.NO_ALARM);
 
     }
 
@@ -145,7 +141,7 @@ public class SecurityServiceTest {
     @Test
     void changeAlarmStatus_systemDisArmed_changeToAlarmStatus() {
         securityService.setArmingStatus(ArmingStatus.DISARMED);
-        verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.NO_ALARM);
+        verify(securityRepository, atMost(2)).setAlarmStatus(AlarmStatus.NO_ALARM);
     }
 
     // Test Ten case 1
