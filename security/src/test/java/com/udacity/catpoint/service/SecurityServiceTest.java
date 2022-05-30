@@ -157,19 +157,6 @@ public class SecurityServiceTest {
        });
     }
 
-    // Test Ten case 2
-    @ParameterizedTest
-    @EnumSource(value = ArmingStatus.class, names = {"ARMED_AWAY", "ARMED_HOME"})
-    void updateSensors_systemArmed_deactivateAllSensorsArmed(ArmingStatus armingStatus) {
-        Set<Sensor> senors = getAllSensors(2, true);
-        when(securityRepository.getAlarmStatus()).thenReturn(AlarmStatus.ALARM);
-        when(securityRepository.getSensors()).thenReturn(senors);
-        securityService.setArmingStatus(armingStatus);
-        securityService.getSensors().forEach(s -> {
-            assertFalse(s.getActive());
-        });
-    }
-
     // Test eleven
     @Test
     void changeAlarmStatus_systemArmedHomeAndCatDetected_changeToAlarmStatus() {
@@ -180,6 +167,17 @@ public class SecurityServiceTest {
         verify(securityRepository, atMost(1)).setAlarmStatus(AlarmStatus.ALARM);
 
     }
+
+    @Test
+    void ifAlarmStateAndSystemDisarmed_changeAlarmStatus() {
+        when(securityRepository.getArmingStatus()).thenReturn(ArmingStatus.DISARMED);
+        when(securityRepository.getAlarmStatus()).thenReturn(AlarmStatus.ALARM);
+        securityService.changeSensorActivationStatus(sensor, true);
+
+        verify(securityRepository, times(1)).setAlarmStatus(any(AlarmStatus.class));
+    }
+
+
 
     // more coverage Test
     @Test
