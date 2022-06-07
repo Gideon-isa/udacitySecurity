@@ -131,6 +131,6 @@ public class SensorPanel extends JPanel implements StatusListener{
 
     @Override
     public void sensorStatusChanged() {
-
+        updateSensorList(sensorListPanel);
     }
 }

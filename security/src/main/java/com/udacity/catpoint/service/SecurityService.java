@@ -26,9 +26,12 @@ public class SecurityService {
     private SecurityRepository securityRepository;
     private Set<StatusListener> statusListeners = new HashSet<>();
 
+    private Boolean isCatDetected = false;
+
     public SecurityService(SecurityRepository securityRepository, ImageService imageService) {
         this.securityRepository = securityRepository;
         this.imageService = imageService;
+
     }
 
     /**
@@ -37,6 +40,10 @@ public class SecurityService {
      * @param armingStatus - an enum that tell the arming state
      */
     public void setArmingStatus(ArmingStatus armingStatus) {
+        if (isCatDetected && armingStatus == ArmingStatus.ARMED_HOME) {
+            setAlarmStatus(AlarmStatus.ALARM);
+        }
+
         if(armingStatus == ArmingStatus.DISARMED) {
             setAlarmStatus(AlarmStatus.NO_ALARM);
         }else {
@@ -54,6 +61,7 @@ public class SecurityService {
      * @param cat True if a cat is detected, otherwise false.
      */
     private void catDetected(Boolean cat) {
+        isCatDetected = cat;
         if(cat && getArmingStatus() == ArmingStatus.ARMED_HOME) {
             setAlarmStatus(AlarmStatus.ALARM);
         } else if (!cat && getAllSensorsSate(false)){
@@ -88,11 +96,7 @@ public class SecurityService {
      * @param status - enum object to show the alarm state
      */
     public void setAlarmStatus(AlarmStatus status) {
-        if (status == AlarmStatus.PENDING_ALARM && getAllSensorsSate(false)) {
-            securityRepository.setAlarmStatus(AlarmStatus.NO_ALARM);
-        }else {
-            securityRepository.setAlarmStatus(status);
-        }
+        securityRepository.setAlarmStatus(status);
         statusListeners.forEach(sl -> sl.notify(status));
     }
 
@@ -119,6 +123,15 @@ public class SecurityService {
         }
     }
 
+    public void changeSensorActivationStatus(Sensor sensor) {
+        if (this.getAlarmStatus() == AlarmStatus.PENDING_ALARM && !sensor.getActive()) {
+            handleSensorDeactivated();
+        } else if (this.getAlarmStatus() == AlarmStatus.ALARM && this.getArmingStatus() == ArmingStatus.DISARMED) {
+            handleSensorDeactivated();
+        }
+        securityRepository.updateSensor(sensor);
+    }
+
     /**
      * Change the activation status for the specified sensor and update alarm status if necessary.
      * @param sensor - sorting display
@@ -131,8 +144,6 @@ public class SecurityService {
             } else if (sensor.getActive()){
                 handleSensorDeactivated();
             }
-        } else if (this.getAlarmStatus() == AlarmStatus.ALARM && this.getArmingStatus() == ArmingStatus.DISARMED) {
-            handleSensorDeactivated();
         }
         sensor.setActive(active);
         securityRepository.updateSensor(sensor);
