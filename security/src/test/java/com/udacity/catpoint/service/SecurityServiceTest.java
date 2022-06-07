@@ -176,14 +176,14 @@ public class SecurityServiceTest {
 //        verify(securityRepository, times(1)).setAlarmStatus(any(AlarmStatus.class));
 //    }
 
-        @Test
-        void ifAlarmStateAndSystemDisarmed_changeStatusToPending() {
-            when(securityRepository.getArmingStatus()).thenReturn(ArmingStatus.DISARMED);
-            when(securityRepository.getAlarmStatus()).thenReturn(AlarmStatus.ALARM);
-            securityService.changeSensorActivationStatus(sensor);
+    @Test
+    void ifAlarmStateAndSystemDisarmed_changeStatusToPending() {
+        when(securityRepository.getArmingStatus()).thenReturn(ArmingStatus.DISARMED);
+        when(securityRepository.getAlarmStatus()).thenReturn(AlarmStatus.ALARM);
+        securityService.changeSensorActivationStatus(sensor);
 
-            verify(securityRepository, times(1)).setAlarmStatus(AlarmStatus.PENDING_ALARM);
-        }
+        verify(securityRepository, times(1)).setAlarmStatus(AlarmStatus.PENDING_ALARM);
+    }
 
 
 
